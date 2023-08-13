@@ -1,0 +1,30 @@
+﻿random_number <- runif(252,min = 52, max = 85)
+View(random_number)
+slope_orange <- 0.945294
+intercept_orange <- 4.706575
+fruit_volume_cm <- (((4*3.14)*(random_number/2)^3)/3)/1000
+View(fruit_volume_cm)
+fruit_formula <- slope_orange*fruit_volume_cm+intercept_orange
+View(fruit_formula)
+df = data.frame("mm"=random_number,
+           "weight"=fruit_formula)
+df1 <- read.csv("early_varieties_size_weight_only.csv")
+
+
+View(df)
+df_round <- floor(df$mm)
+View(df_round)
+
+vec <- c()
+for (mm in df_round) {
+  if (sum((df1$�..fruit.size..round.==mm)) != 0){
+    vec <- c(vec,df1$mean_fruit_weight_tables[df1$�..fruit.size..round.==mm]) 
+  }
+  else{
+    vec <- c(vec,NaN) 
+  }
+}
+df['mean_weight_random'] <- vec
+df=df[!is.na(df$mean_weight_random),]
+dif <-mean(abs(df$weight-df$mean_weight_random)) 
+print(dif)
